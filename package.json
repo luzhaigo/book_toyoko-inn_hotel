@@ -1,13 +1,13 @@
 {
-  "name": "book_hotel",
+  "name": "book_toyoko-inn_hotel",
   "version": "1.0.0",
-  "description": "",
+  "description": "using puppeteer to book the hotel automatically",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "NODE_ENV=debug node index.js"
   },
-  "author": "",
+  "author": "pohsun",
   "license": "ISC",
   "dependencies": {
     "puppeteer": "^2.1.1"
