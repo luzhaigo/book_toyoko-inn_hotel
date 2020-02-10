@@ -7,7 +7,7 @@ module.exports = async page => {
     function getMultipleElementsFoundError(message, container) {
       return getElementError(
         `${message}\n\n(If this is intentional, then use the \`*AllBy*\` variant of the query (like \`queryAllByText\`, \`getAllByText\`, or \`findAllByText\`)).`,
-        container
+        container,
       );
     }
 
@@ -53,7 +53,7 @@ module.exports = async page => {
           throw new Error(
             'trim and collapseWhitespace are not supported with a normalizer. ' +
               'If you want to use the default trim and collapseWhitespace logic in your normalizer, ' +
-              'use "getDefaultNormalizer({trim, collapseWhitespace})" and compose that into your normalizer'
+              'use "getDefaultNormalizer({trim, collapseWhitespace})" and compose that into your normalizer',
           );
         }
 
@@ -120,13 +120,13 @@ module.exports = async page => {
     function queryAllByText(
       container,
       text,
-      { selector = '*', exact = true, collapseWhitespace, trim, ignore = 'script, style', normalizer } = {}
+      { selector = '*', exact = true, collapseWhitespace, trim, ignore = 'script, style', normalizer } = {},
     ) {
       const matcher = exact ? matches : fuzzyMatches;
       const matchNormalizer = makeNormalizer({
         collapseWhitespace,
         trim,
-        normalizer
+        normalizer,
       });
       let baseArray = [];
       if (typeof container.matches === 'function' && container.matches(selector)) {
@@ -144,7 +144,7 @@ module.exports = async page => {
     const [queryByText, getAllByText, getByText, findAllByText, findByText] = buildQueries(
       queryAllByText,
       getMultipleError,
-      getMissingError
+      getMissingError,
     );
 
     window.domTestingUtils = {
@@ -153,7 +153,7 @@ module.exports = async page => {
       getAllByText,
       getByText,
       findAllByText,
-      findByText
+      findByText,
     };
   });
 };

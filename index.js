@@ -12,9 +12,9 @@ async function start() {
     ...isDebugging(),
     defaultViewport: {
       width: 1440,
-      height: 708
+      height: 708,
     },
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   });
 
   const page = await browser.newPage();
