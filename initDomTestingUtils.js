@@ -11,26 +11,18 @@ module.exports = async page => {
       );
     }
 
-    function getDefaultNormalizer({
-      trim = true,
-      collapseWhitespace = true
-    } = {}) {
+    function getDefaultNormalizer({ trim = true, collapseWhitespace = true } = {}) {
       return text => {
         let normalizedText = text;
         normalizedText = trim ? normalizedText.trim() : normalizedText;
-        normalizedText = collapseWhitespace
-          ? normalizedText.replace(/\s+/g, ' ')
-          : normalizedText;
+        normalizedText = collapseWhitespace ? normalizedText.replace(/\s+/g, ' ') : normalizedText;
         return normalizedText;
       };
     }
 
     function makeFindQuery(getter) {
       return (container, text, options, waitForElementOptions) =>
-        waitForElement(
-          () => getter(container, text, options),
-          waitForElementOptions
-        );
+        waitForElement(() => getter(container, text, options), waitForElementOptions);
     }
 
     function makeGetAllQuery(allQuery, getMissingError) {
@@ -47,10 +39,7 @@ module.exports = async page => {
       return (container, ...args) => {
         const els = allQuery(container, ...args);
         if (els.length > 1) {
-          throw getMultipleElementsFoundError(
-            getMultipleError(container, ...args),
-            container
-          );
+          throw getMultipleElementsFoundError(getMultipleError(container, ...args), container);
         }
         return els[0] || null;
       };
@@ -59,10 +48,7 @@ module.exports = async page => {
     function makeNormalizer({ trim, collapseWhitespace, normalizer }) {
       if (normalizer) {
         // User has specified a custom normalizer
-        if (
-          typeof trim !== 'undefined' ||
-          typeof collapseWhitespace !== 'undefined'
-        ) {
+        if (typeof trim !== 'undefined' || typeof collapseWhitespace !== 'undefined') {
           // They've also specified a value for trim or collapseWhitespace
           throw new Error(
             'trim and collapseWhitespace are not supported with a normalizer. ' +
@@ -116,9 +102,7 @@ module.exports = async page => {
       }
 
       return Array.from(node.childNodes)
-        .filter(
-          child => child.nodeType === TEXT_NODE && Boolean(child.textContent)
-        )
+        .filter(child => child.nodeType === TEXT_NODE && Boolean(child.textContent))
         .map(c => c.textContent)
         .join('');
     }
@@ -136,14 +120,7 @@ module.exports = async page => {
     function queryAllByText(
       container,
       text,
-      {
-        selector = '*',
-        exact = true,
-        collapseWhitespace,
-        trim,
-        ignore = 'script, style',
-        normalizer
-      } = {}
+      { selector = '*', exact = true, collapseWhitespace, trim, ignore = 'script, style', normalizer } = {}
     ) {
       const matcher = exact ? matches : fuzzyMatches;
       const matchNormalizer = makeNormalizer({
@@ -152,34 +129,27 @@ module.exports = async page => {
         normalizer
       });
       let baseArray = [];
-      if (
-        typeof container.matches === 'function' &&
-        container.matches(selector)
-      ) {
+      if (typeof container.matches === 'function' && container.matches(selector)) {
         baseArray = [container];
       }
       return [...baseArray, ...Array.from(container.querySelectorAll(selector))]
         .filter(node => !ignore || !node.matches(ignore))
-        .filter(node =>
-          matcher(getNodeText(node), node, text, matchNormalizer)
-        );
+        .filter(node => matcher(getNodeText(node), node, text, matchNormalizer));
     }
 
-    const getMultipleError = (c, text) =>
-      `Found multiple elements with the text: ${text}`;
+    const getMultipleError = (c, text) => `Found multiple elements with the text: ${text}`;
     const getMissingError = (c, text) =>
       `Unable to find an element with the text: ${text}. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.`;
 
-    const [
-      queryByText,
-      getAllByText,
-      getByText,
-      findAllByText,
-      findByText
-    ] = buildQueries(queryAllByText, getMultipleError, getMissingError);
+    const [queryByText, getAllByText, getByText, findAllByText, findByText] = buildQueries(
+      queryAllByText,
+      getMultipleError,
+      getMissingError
+    );
 
     window.domTestingUtils = {
       queryByText,
+      queryAllByText,
       getAllByText,
       getByText,
       findAllByText,

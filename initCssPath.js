@@ -10,11 +10,7 @@ module.exports = async page => {
         } else {
           let sib = el,
             nth = 1;
-          while (
-            sib.nodeType === Node.ELEMENT_NODE &&
-            (sib = sib.previousElementSibling) &&
-            nth++
-          );
+          while (sib.nodeType === Node.ELEMENT_NODE && (sib = sib.previousElementSibling) && nth++);
           selector += ':nth-child(' + nth + ')';
         }
         path.unshift(selector);
